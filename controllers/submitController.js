@@ -6,24 +6,51 @@ const Secret = require('../models/secret');
 router.route('/')
 
 .get((req, res) => {
-    const userId = req.session.userId;
-    console.log(userId);
-    res.render('submit.ejs');
-})
+    if(!req.isAuthenticated()){
+        res.redirect('/login');
+        return;
+    }
+    const userId = req.session.passport.user;
 
-.post((req, res) => {
-    const userId = req.session.userId;
-    const secret = new Secret({
-        content: req.body.secret
-    });
-
-    User.findById(userId, (err, user) => {
+    User.findById(userId, (err, foundUser) => {
         if (err) {
             console.log(err);
             return;
         }
-        user.secrets.push(secret);
-        user.save((err, user) => {
+        if(!foundUser){
+            console.log("User not found");
+            res.redirect("/logout");
+            return;
+        }
+
+        res.render('submit.ejs', {user: foundUser});
+    });
+})
+
+.post((req, res) => {
+    if(!req.body.secret){
+        res.redirect('/submit');
+        return;
+    }
+
+    const userId = req.session.passport.user;
+    const secret = new Secret({
+        content: req.body.secret
+    });
+
+    User.findById(userId, (err, foundUser) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        if(!foundUser){
+            console.log("User not found");
+            res.redirect("/logout");
+            return;
+        }
+
+        foundUser.secrets.push(secret);
+        foundUser.save((err, user) => {
             if (err) {
                 console.log(err);
                 return;
@@ -33,15 +60,6 @@ router.route('/')
     });
 
 });
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router;

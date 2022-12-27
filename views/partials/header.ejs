@@ -6,7 +6,38 @@
   <title>Secrets</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/bootstrap-social.css">
   <link rel="stylesheet" href="css/styles.css">
+
 </head>
 
 <body>
+
+  <nav class="navbar navbar-expand navbar-dark bg-dark text-light">
+    <a class="navbar-brand" href="/"><i class="fas fa-mask"></i> Secrets</a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ml-auto ">
+
+        <% if(user) { %>
+          <li class="nav-item dropdown my-auto">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <% if (user.profilePicture) { %>
+                <i><img class="profile-picture" src="<%= user.profilePicture %>" alt="user profile picture"></i>
+              <% } else { %>
+                <i class="far fa-user fa-2x"></i>
+              <% } %>
+              <%= user.name %>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Profile</a>
+              <a class="dropdown-item" href="/logout">Logout</a>
+            </div>
+          </li>
+        <% } else { %>
+            <li class="nav-item my-auto">
+              <a class="nav-link text-light" href="/login">Login</a>
+            </li>
+        <% } %>
+      </ul>
+    </div>
+  </nav>

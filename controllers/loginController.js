@@ -1,44 +1,45 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
+const passport = require('passport');
 
 router.route('/')
 
 .get((req, res) => {
-    res.render('login.ejs');
+    if(req.isAuthenticated()){
+        res.redirect('/secrets');
+        return;
+    }
+
+    res.render('login.ejs', {user: null});
 })
 
 .post((req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
+    const user = new User({
+        username: req.body.username,
+        password: req.body.password
+    });
 
-    User.findOne({email: username}, (err, foundUser) => {
-        if(err){
+    req.login(user, (err) => {
+        if (err){
             console.log(err);
+            redirect('/login');
             return;
         }
 
-        if(foundUser.password !== password) {
-            res.redirect('/login'); // todo: pass in login error bool
-            return;
-        }
-        req.session.userId = foundUser.id;
-        req.session.save((err) => {
-            if(err){
-                console.log(err);
-                return;
-            }
+        passport.authenticate("local")(req, res, () => {
             res.redirect('/secrets');
         });
     });
 });
-
-
-
-
-
-
-
+// .post(passport.authenticate("local", {
+//     successRedirect: "/secrets",
+//     failureRedirect: "/login"
+// }), (req, res) => {
+//
+// });
 
 
 module.exports = router;

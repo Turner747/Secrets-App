@@ -4,20 +4,13 @@ const router = express.Router();
 router.route('/')
 
 .get((req, res) => {
-    if(req.session.userId){
+    if(req.isAuthenticated()){
         res.redirect('/secrets');
     }
     else {
-        res.render('home.ejs');
+        res.render('home.ejs', {user: null});
     }
 });
-
-
-
-
-
-
-
 
 
 module.exports = router;

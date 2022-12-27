@@ -14,3 +14,10 @@ body {
   color: #fff;
   background-color: #000;
 }
+
+.profile-picture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
